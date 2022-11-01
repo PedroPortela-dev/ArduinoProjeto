@@ -1,10 +1,12 @@
-#define ladpin 13
+#define ladpin1 13
+#define ladpin2 12
 
 int valor, i;
 
 void setup(){
   Serial.begin(9600);
-  pinMode(ladpin, OUTPUT);
+  pinMode(ladpin1, OUTPUT);
+  pinMode(ladpin2, OUTPUT);
 }
 
 void loop(){
@@ -12,15 +14,18 @@ void loop(){
     Serial.print("Digite um numero: ");
     i++;
   }
-  if(Serial.available()){
+  if(Serial.available()==1){
     valor = 100*(Serial.read()-48);
     Serial.println(valor);
     if(valor <0 || valor>900){
     	valor = 0;
       	Serial.println("\nInvalido");
     }
- 	Serial.flush();
     i = 0;
+  }
+  while(Serial.available()){
+    Serial.read();
+    Serial.flush();
   }
   if(valor!=0){
     blink(valor);
@@ -28,8 +33,10 @@ void loop(){
 }
 
 void blink(int time){
-  digitalWrite(ladpin, HIGH);
+  digitalWrite(ladpin1, HIGH);
+  digitalWrite(ladpin2, LOW);
   delay(time);
-  digitalWrite(ladpin, LOW);
+  digitalWrite(ladpin2, HIGH);
+  digitalWrite(ladpin1, LOW);
   delay(time);
 }
