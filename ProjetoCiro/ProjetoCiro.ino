@@ -29,6 +29,26 @@ void loop() {
   }else
   if(serial == 'H'){
     drive->freiar();
+  }else
+   if(serial == 'C'){
+    drive->frente(255);
+    delay(500);
+    drive->freiar();
+  }else
+   if(serial == 'B'){
+    drive->tras(255);
+    delay(500);
+    drive->freiar();
+  }else
+   if(serial == 'F'){
+    drive->direita(150);
+    delay(500);
+    drive->freiar();
+  }else
+   if(serial == 'E'){
+    drive->esquerda(150);
+    delay(500);
+    drive->freiar();
   }
   
 }
