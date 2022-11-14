@@ -1,11 +1,11 @@
 class Motor{
   public:
-    Motor(int v, int p1, int p2, bool forward = false, int pExtra = 0){
+    Motor(double v, int p1, int p2, bool forward = false, double pExtra = 0){
       this->p1=p1;
       this->p2=p2;
       this->pv=v;
       this->forward=forward;
-      this->pExtra = pExtra;
+      this->pExtra = 1-pExtra;
       pinMode(p1,OUTPUT);
       pinMode(p2,OUTPUT);
       pinMode(pv,OUTPUT);
@@ -14,13 +14,13 @@ class Motor{
       digitalWrite(pv,0);
     }
     void frente(int v){
-      v-= pExtra;
+      v*= pExtra;
       digitalWrite(p1,LOW);
       digitalWrite(p2,HIGH);
       analogWrite(pv,v);
     }
     void tras(int v){
-      v-= pExtra;
+      v*= pExtra;
       digitalWrite(p1,HIGH);
       digitalWrite(p2,LOW);
       analogWrite(pv,v);
@@ -36,7 +36,7 @@ class Motor{
       analogWrite(pv,255);
     }
     void mover(int vel){
-      vel-= pExtra;
+      vel*= pExtra;
       if(vel >= 0){
         frente(vel);
       }
@@ -46,6 +46,7 @@ class Motor{
       }
     }
   private:
-    int p1,p2,pv, pExtra;
+    int p1,p2;
+    double pExtra, pv;
     bool forward;
 };

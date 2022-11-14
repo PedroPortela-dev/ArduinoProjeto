@@ -4,7 +4,7 @@
 char serial;
 
 Motor *md = new Motor(9, 7, 8);
-Motor *me = new Motor(6, 4, 5, false, 30);
+Motor *me = new Motor(6, 4, 5, false, 0.12);
 Driver *drive = new Driver(md, me);
 
 SoftwareSerial mySerial(10, 11);
