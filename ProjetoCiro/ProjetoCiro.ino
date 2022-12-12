@@ -1,54 +1,81 @@
-#include "Driver.h"
 #include <SoftwareSerial.h>
 
-char serial;
+SoftwareSerial mySerial(10, 11); // RX, TX
 
-Motor *md = new Motor(9, 7, 8);
-Motor *me = new Motor(6, 4, 5, false, 0.12);
-Driver *drive = new Driver(md, me);
+int motorPin[6] = {4,5,6,7,8,9};
 
-SoftwareSerial mySerial(10, 11);
+int tempoPorCm = 40.31354981;
+int noventaGraus = 40.0*7*3.141592/2;
+int powerDireita = 150*0.8;
+int powerEsquerda = 150;
+float RaioDireita;
+float RaioEsquerda = 40; 
+float PowerDireita;
+float umciclo;
+char leitura;
 
-void setup() {
-  mySerial.begin(9600);
-}
-
-void loop() {
-  serial = mySerial.read();
-  if(serial == 'U'){
-    drive->frente(255);
-  }else
-  if(serial == 'D'){
-    drive->tras(255);
-  }else
-  if(serial == 'R'){
-    drive->direita(150);
-  }else
-  if(serial == 'L'){
-    drive->esquerda(150);
-  }else
-  if(serial == 'H'){
-    drive->freiar();
-  }else
-   if(serial == 'C'){
-    drive->frente(255);
-    delay(500);
-    drive->freiar();
-  }else
-   if(serial == 'B'){
-    drive->tras(255);
-    delay(500);
-    drive->freiar();
-  }else
-   if(serial == 'F'){
-    drive->direita(150);
-    delay(500);
-    drive->freiar();
-  }else
-   if(serial == 'E'){
-    drive->esquerda(150);
-    delay(500);
-    drive->freiar();
+void setup()
+{
+  //Todos os pinos dos motores setados como OUTPUT
+  for(int i = 0; i<6; i++){
+    pinMode(motorPin[i], OUTPUT);
   }
   
+  mySerial.begin(9600);
+}
+void loop(){
+  mySerial.println("Circulo(c) ou Quadrado(q)?");
+  while(!mySerial.available());
+  leitura = mySerial.read();
+  if(leitura == 'c'){
+    circulo();
+  }else if(leitura == 'q'){
+    quadrado();
+  }
+}
+
+void quadrado()
+{
+  for(int i = 0; i < 4; i++){
+    roboFrente();
+    delay(30*tempoPorCm);
+    roboDireita();
+    delay(noventaGraus);
+  }
+  roboParar();
+}
+
+void circulo(){
+  frente(0, powerDireita*PowerDireita);
+  frente(1, powerEsquerda);
+  delay(umciclo);
+  roboParar();
+}
+
+void roboFrente(){
+  frente(0, powerDireita);
+  frente(1, powerEsquerda);
+}
+void roboDireita(){
+  frente(0, powerDireita);
+  tras(1, powerEsquerda);
+}
+void roboParar(){
+  parar(0);
+  parar(1);
+}
+void parar(int j){
+  digitalWrite(motorPin[3*j+0], LOW);
+  digitalWrite(motorPin[3*j+1], LOW);
+  analogWrite(motorPin[3*j+2], 0);
+}
+void frente(int j, int power){
+  digitalWrite(motorPin[3*j+0], HIGH);
+  digitalWrite(motorPin[3*j+1], LOW);
+  analogWrite(motorPin[3*j+2], power);
+}
+void tras(int j, int power){
+  digitalWrite(motorPin[3*j+0], LOW);
+  digitalWrite(motorPin[3*j+1], HIGH);
+  analogWrite(motorPin[3*j+2], power);
 }
