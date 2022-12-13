@@ -9,9 +9,10 @@ int noventaGraus = 40.0*7*3.141592/2;
 int powerDireita = 150*0.8;
 int powerEsquerda = 150;
 float RaioDireita;
-float RaioEsquerda = 40; 
-float PowerDireita;
+float RaioEsquerda; 
+float PowerDireita2;
 float umciclo;
+int ladoQuadrado;
 char leitura;
 
 void setup()
@@ -36,9 +37,12 @@ void loop(){
 
 void quadrado()
 {
+  mySerial.println("Digite o tamanho do lado do quadrado: ");
+  while(!mySerial.available());
+  ladoQuadrado = mySerial.parseInt();
   for(int i = 0; i < 4; i++){
     roboFrente();
-    delay(30*tempoPorCm);
+    delay(ladoQuadrado*tempoPorCm);
     roboDireita();
     delay(noventaGraus);
   }
@@ -46,7 +50,12 @@ void quadrado()
 }
 
 void circulo(){
-  frente(0, powerDireita*PowerDireita);
+  mySerial.println("Digite o tamanho do diametro: ");
+  while(!mySerial.available());
+  RaioEsquerda = mySerial.parseInt();
+  RaioDireita = RaioEsquerda - 14;
+  powerDireita2 = RaioDireita/RaioEsquerda;
+  frente(0, powerDireita*PowerDireita2);
   frente(1, powerEsquerda);
   delay(umciclo);
   roboParar();
